@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "363101858871",
+    "project_id": "mobile-engineering-quizapp",
+    "storage_bucket": "mobile-engineering-quizapp.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:363101858871:android:313ba3373ba4c9804b63b2",
+        "android_client_info": {
+          "package_name": "com.example.quiz"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDK7jisBkAV7YLREo35qGBqn5AgD2xVEDc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
