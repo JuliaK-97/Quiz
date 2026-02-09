@@ -42,16 +42,19 @@ public class CategoryAdapter extends BaseAdapter {
         myView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(view.getContext(), TestActivity.class);
-                intent.putExtra("CAT_INDEX", i);
-                view.getContext().startActivity(intent);
+                DbQuery.g_selected_cat_index = i;
+
+                Intent intent = new Intent(v.getContext(), TestActivity.class);
+                v.getContext().startActivity(intent);
             }
         });
+
         TextView catName = myView.findViewById(R.id.cat_name);
         TextView noOfTests = myView.findViewById(R.id.no_of_tests);
         catName.setText(cat_list.get(i).getName());
         noOfTests.setText("Tests: " + String.valueOf(cat_list.get(i).getNoOfTests()));
 
         return myView;
+
     }
 }
