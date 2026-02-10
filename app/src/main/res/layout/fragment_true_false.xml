@@ -1,14 +1,57 @@
-<?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:gravity="center"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".TrueFalseFragment">
+    android:layout_height="match_parent">
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:id="@+id/question_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:elevation="5dp"
+        android:gravity="center"
+        android:inputType="textMultiLine"
+        android:padding="8dp"
+        android:scrollbars="vertical"
+        android:text="A red traffic light means stop."
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:translationZ="3dp" />
 
-</FrameLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/true_button"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:text="True"
+            android:textColor="@android:color/white"
+            android:background="@drawable/true_button_selector"
+            android:foreground="?attr/selectableItemBackground"
+            android:elevation="4dp" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/false_button"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:layout_marginStart="16dp"
+            android:text="False"
+            android:textColor="@android:color/white"
+            android:background="@drawable/false_button_selector"
+            android:foreground="?attr/selectableItemBackground"
+            android:elevation="4dp" />
+
+
+
+    </LinearLayout>
+</LinearLayout>

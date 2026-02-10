@@ -5,6 +5,227 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".StartTestActivity">
+    android:background="@drawable/main_background"
+    tools:context=".StartTestActivity"
+    android:fitsSystemWindows="true">
+    <ImageView
+        android:id="@+id/st_backBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:elevation="3dp"
+        android:padding="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_back" />
+
+    <TextView
+        android:id="@+id/st_cat_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="70dp"
+        android:layout_marginEnd="16dp"
+        android:text="Category"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+
+    <TextView
+        android:id="@+id/st_test_no"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="80dp"
+        android:text="Test No. 2"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="22sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/ll2"
+         />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/ll2"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@id/start_Tbtn"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="8dp"
+        android:layout_marginBottom="80dp"
+        android:layout_marginEnd="8dp"
+        >
+        <androidx.cardview.widget.CardView
+            android:layout_width="120dp"
+            android:layout_height="160dp"
+            app:cardCornerRadius="5dp"
+            app:cardElevation="5dp"
+            app:cardUseCompatPadding="true"
+            android:layout_weight="1"
+            >
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_margin="8dp"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:paddingTop="16dp"
+                >
+                <ImageView
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:src="@drawable/questionmark"
+                    android:layout_marginBottom="8dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/st_total_qs"
+                    android:text = "Questions"
+                    android:gravity="center_horizontal"
+                    android:layout_weight="1"
+                    android:textAlignment="center"
+                    android:textSize="18sp"
+                    android:textStyle="bold"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/st_value_qs"
+                    android:text = "5"
+                    android:gravity="center_horizontal"
+                    android:layout_weight="1"
+                    android:textAlignment="center"
+                    android:textSize="20sp"
+                    android:textStyle="bold"/>
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+        <androidx.cardview.widget.CardView
+            android:layout_width="120dp"
+            android:layout_height="160dp"
+            app:cardCornerRadius="5dp"
+            app:cardElevation="5dp"
+            app:cardUseCompatPadding="true"
+            android:layout_weight="1"
+            >
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_margin="8dp"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:paddingTop="16dp"
+                >
+                <ImageView
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:src="@drawable/trophy"
+                    android:layout_marginBottom="8dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/st_best_score"
+                    android:text = "Best score"
+                    android:gravity="center_horizontal"
+                    android:layout_weight="1"
+                    android:textAlignment="center"
+                    android:textSize="18sp"
+                    android:textStyle="bold"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/st_value_score"
+                    android:text = "80"
+                    android:gravity="center_horizontal"
+                    android:layout_weight="1"
+                    android:textAlignment="center"
+                    android:textSize="20sp"
+                    android:textStyle="bold"/>
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+        <androidx.cardview.widget.CardView
+            android:layout_width="120dp"
+            android:layout_height="160dp"
+            app:cardCornerRadius="5dp"
+            app:cardElevation="5dp"
+            app:cardUseCompatPadding="true"
+            android:layout_weight="1"
+            >
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_margin="8dp"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:paddingTop="16dp"
+                >
+                <ImageView
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:src="@drawable/clock"
+                    android:layout_marginBottom="8dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/st_time"
+                    android:text = "Time"
+                    android:gravity="center_horizontal"
+                    android:layout_weight="1"
+                    android:textAlignment="center"
+                    android:textSize="18sp"
+                    android:textStyle="bold"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/st_value_time"
+                    android:text = "12:30 min"
+                    android:gravity="center_horizontal"
+                    android:layout_weight="1"
+                    android:textAlignment="center"
+                    android:textSize="20sp"
+                    android:textStyle="bold"/>
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+    </LinearLayout>
+    <Button
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/start_Tbtn"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="60dp"
+        android:textColor="@color/white"
+        app:cornerRadius="20dp"
+        app:strokeWidth="1dp"
+        android:text="Start"
+        android:textSize="22sp"
+        android:elevation="5dp"
+        android:translationZ="3dp"
+        android:stateListAnimator="@null"
+        android:backgroundTint="#5AE45E"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+
+        />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

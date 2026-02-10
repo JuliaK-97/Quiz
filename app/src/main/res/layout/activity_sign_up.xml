@@ -5,7 +5,8 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SignUpActivity">
+    tools:context=".SignUpActivity"
+    android:fitsSystemWindows="true">
 
     <ImageView
         android:id="@+id/backBtn"
@@ -23,7 +24,7 @@
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/teal_500"
+        android:background="@color/primary"
         android:gravity="center"
         android:orientation="vertical"
         android:padding="16dp"
@@ -42,6 +43,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:text="@string/app_name"
+            android:textColor="@color/white"
             android:textSize="28sp" />
 
 
@@ -57,54 +59,54 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         >
+
         <EditText
             android:id="@+id/username"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
             android:layout_marginStart="32dp"
             android:layout_marginTop="64dp"
             android:layout_marginEnd="32dp"
-            android:textColor="@color/black"
-            android:hint="Full Name"
             android:ems="10"
+            android:hint="Full Name"
             android:inputType="text"
-             />
+            android:textColor="@color/black" />
+
         <EditText
             android:id="@+id/emailID"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
             android:layout_marginStart="32dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="32dp"
-            android:textColor="@color/black"
-            android:hint="Email"
             android:ems="10"
+            android:hint="Email"
             android:inputType="text"
-            />
+            android:textColor="@color/black" />
+
         <EditText
             android:id="@+id/passwordN"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
             android:layout_marginStart="32dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="32dp"
-            android:textColor="@color/black"
-            android:hint="Enter Password"
             android:ems="10"
+            android:hint="Enter Password"
             android:inputType="textPassword"
-            />
+            android:textColor="@color/black" />
+
         <EditText
             android:id="@+id/confirmPass"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
             android:layout_marginStart="32dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="32dp"
-            android:textColor="@color/black"
-            android:hint="Confirm Password!"
             android:ems="10"
+            android:hint="Confirm Password!"
             android:inputType="textPassword"
-            />
+            android:textColor="@color/black" />
 
 
 

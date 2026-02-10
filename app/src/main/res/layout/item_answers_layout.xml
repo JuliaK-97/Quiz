@@ -1,6 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:layout_marginTop="8dp"
+    android:background="@drawable/round_view">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/quesNo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Question No. 1"
+        android:paddingBottom="4dp"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:id="@+id/divider3"
+        android:layout_marginBottom="8dp"
+        android:background="?android:attr/listDivider"
+        />
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/question"
+        android:layout_marginBottom="8dp"
+        android:text="Question"
+        />
+
+    <!-- Option A -->
+    <TextView
+        android:id="@+id/optionA"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Option A"
+        android:padding="4dp"/>
+
+    <!-- Option B -->
+    <TextView
+        android:id="@+id/optionB"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Option B"
+        android:padding="4dp"/>
+
+    <!-- Option C -->
+    <TextView
+        android:id="@+id/optionC"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Option C"
+        android:padding="4dp"/>
+
+    <!-- Option D -->
+    <TextView
+        android:id="@+id/optionD"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Option D"
+        android:padding="4dp"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/result"
+        android:text="wrong"
+        android:layout_marginTop="8dp"
+        android:textColor="@color/red"/>
+
+</LinearLayout>

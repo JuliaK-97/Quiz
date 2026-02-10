@@ -25,6 +25,32 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+/**
+ * SignUpActivity
+ *
+ * Purpose:
+ * This activity handles user registration using Firebase Authentication. It collects
+ * user input, validates the data, creates a new Firebase account, and initializes
+ * user profile data in the database before navigating to the main app screen.
+ *
+ * Why this activity is used:
+ * - Provides a secure and reliable registration flow without building a custom backend.
+ * - Ensures user data is validated before attempting account creation.
+ * - Separates authentication from application-specific data storage using DbQuery.
+ * - Prevents users from returning to the registration screen after successful sign-up.
+ *
+ * How it works:
+ * 1. Collects the user’s name, email, password, and confirm password from input fields.
+ * 2. Validates the inputs to ensure all fields are filled and passwords match.
+ * 3. Displays a progress dialog while the sign-up process is in progress.
+ * 4. Calls FirebaseAuth.createUserWithEmailAndPassword() to create the user account.
+ * 5. On successful registration:
+ *    - Calls DbQuery.createUserData() to store user profile details.
+ *    - Calls DbQuery.loadData() to preload user-specific app data.
+ *    - Navigates to MainActivity and finishes the SignUpActivity.
+ * 6. On failure, displays an error message using a Toast and dismisses the progress dialog.
+ */
+
 public class SignUpActivity extends AppCompatActivity {
     private EditText name, email, pass, confirmPass;
     private Button signUpBtn;
@@ -102,7 +128,7 @@ public class SignUpActivity extends AppCompatActivity {
         }
         if(passStr.compareTo(confirmPassStr)!=0)
         {
-            Toast.makeText(SignUpActivity.this,"Password and Confirm Password Should be the same!",Toast.LENGTH_SHORT).show();
+            Toast.makeText(SignUpActivity.this,"Password and Confirm Password should be the same!",Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;
@@ -118,10 +144,40 @@ public class SignUpActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             Toast.makeText(SignUpActivity.this, "Sign Up Successful!", Toast.LENGTH_SHORT).show();
-                            progressDialog.dismiss();
-                            Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
-                            startActivity(intent);
-                            SignUpActivity.this.finish();
+
+                            DbQuery.createUserData(emailStr, nameStr, new MyCompleteListener() {
+                                @Override
+                                public void onSuccess() {
+                                    DbQuery.loadData(new MyCompleteListener() {
+                                        @Override
+                                        public void onSuccess() {
+                                            progressDialog.dismiss();
+                                            Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
+                                            startActivity(intent);
+                                            SignUpActivity.this.finish();
+
+                                        }
+
+                                        @Override
+                                        public void onFailure() {
+                                            Toast.makeText(SignUpActivity.this, "Something went wrong! Please try again later!", Toast.LENGTH_SHORT).show();
+                                            progressDialog.dismiss();
+
+                                        }
+                                    });
+
+
+                                }
+
+                                @Override
+                                public void onFailure() {
+                                    Toast.makeText(SignUpActivity.this, "Something went wrong! Please try again later!", Toast.LENGTH_SHORT).show();
+                                    progressDialog.dismiss();
+
+                                }
+                            });
+
+
                         } else {
                             progressDialog.dismiss();
                             Toast.makeText(SignUpActivity.this, "Authentication failed.",

@@ -12,8 +12,27 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Quiz">
         <activity
-            android:name=".TestActivity"
+            android:name=".BookMarksActivity"
             android:exported="false" />
+        <activity
+            android:name=".AnswersActivity"
+            android:exported="false" />
+        <activity
+            android:name=".MyProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ScoreActivity"
+            android:exported="false" />
+        <activity
+            android:name=".StartTestActivity"
+            android:exported="false" />
+        <activity
+            android:name=".QuestionsActivity"
+            android:exported="false" /> <!-- Explicitly use NoActionBar for TestActivity -->
+        <activity
+            android:name=".TestActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Quiz.NoActionBar" />
         <activity
             android:name=".SignUpActivity"
             android:exported="false" />
@@ -22,7 +41,7 @@
             android:exported="false" />
         <activity
             android:name=".MainActivity"
-            android:exported="false" />
+            android:exported="false" /> <!-- Launcher activity also uses NoActionBar -->
         <activity
             android:name=".SplashActivity2"
             android:exported="true"

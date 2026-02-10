@@ -1,5 +1,6 @@
 [versions]
 agp = "8.11.2"
+googleServices = "4.4.4"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
@@ -27,4 +28,4 @@ activity = { group = "androidx.activity", name = "activity", version.ref = "acti
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
-
+google-services = { id = "com.google.gms.google-services", version.ref = "googleServices" }

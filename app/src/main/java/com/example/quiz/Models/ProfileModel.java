@@ -1,12 +1,33 @@
-package com.example.quiz;
+package com.example.quiz.Models;
 
 public class ProfileModel {
     private String name;
     private String email;
+    private String phone;
 
-    public ProfileModel(String name, String email) {
+    public int getBookmarksCount() {
+        return bookmarksCount;
+    }
+
+    public void setBookmarksCount(int bookmarksCount) {
+        this.bookmarksCount = bookmarksCount;
+    }
+
+    private int bookmarksCount;
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public ProfileModel(String name, String email, String phone, int bookmarksCount) {
         this.name = name;
         this.email = email;
+        this.phone = phone;
+        this.bookmarksCount = bookmarksCount;
     }
 
     public String getName() {

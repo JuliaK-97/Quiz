@@ -1,14 +1,56 @@
-<?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:padding="16dp"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".SingleChoiceFragment">
+    android:layout_height="match_parent">
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
+        android:id="@+id/question_text"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:padding="8dp"
+        android:gravity="center"
+        android:text="What does this road sign indicate?"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:translationZ="3dp"
+        android:scrollbars="vertical"
+        android:inputType="textMultiLine"/>
 
-</FrameLayout>
+    <RadioGroup
+        android:id="@+id/options_group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:inputType="textMultiLine">
+
+        <RadioButton
+            android:id="@+id/optionA"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="No entry"
+            android:inputType="textMultiLine"/>
+
+        <RadioButton
+            android:id="@+id/optionB"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Stop"
+            android:inputType="textMultiLine"/>
+
+        <RadioButton
+            android:id="@+id/optionC"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Yield"
+            android:inputType="textMultiLine"/>
+
+        <RadioButton
+            android:id="@+id/optionD"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Speed limit"
+            android:inputType="textMultiLine"/>
+    </RadioGroup>
+</LinearLayout>

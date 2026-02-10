@@ -1,14 +1,48 @@
-<?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:padding="16dp"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".MultiSelectFragment">
+    android:layout_height="match_parent">
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
+        android:id="@+id/question_text"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:gravity="center"
+        android:inputType="textMultiLine"
+        android:padding="8dp"
+        android:scrollbars="vertical"
+        android:text="What does this road sign indicate?"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:translationZ="3dp" />
 
-</FrameLayout>
+    <CheckBox
+        android:id="@+id/optionA"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Stop the vehicle immediately"
+        android:inputType="textMultiLine"/>
+
+    <CheckBox
+        android:id="@+id/optionB"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Leave the scene quickly"
+        android:inputType="textMultiLine"/>
+
+    <CheckBox
+        android:id="@+id/optionC"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Provide assistance to the injured"
+        android:inputType="textMultiLine"/>
+
+    <CheckBox
+        android:id="@+id/optionD"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Report the accident to police"
+        android:inputType="textMultiLine"/>
+</LinearLayout>

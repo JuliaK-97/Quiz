@@ -1,18 +1,18 @@
-package com.example.quiz;
+package com.example.quiz.Models;
 
 public class CategoryModel {
-    private String docID;     // Firestore document ID
-    private String name;      // Category name
-    private int noOfTests;    // Number of tests in this category
+    private String docID;
+    private String name;
+    private int noOfTests;
 
-    // Constructor matches how you call it in DbQuery
+
     public CategoryModel(String docID, int noOfTests, String name) {
         this.docID = docID;
         this.noOfTests = noOfTests;
         this.name = name;
     }
 
-    // Getters and setters
+
     public String getDocID() {
         return docID;
     }

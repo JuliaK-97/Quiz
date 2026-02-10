@@ -1,4 +1,4 @@
-package com.example.quiz;
+package com.example.quiz.Models;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -10,17 +10,38 @@ public class QuestionModel implements Serializable {
     private String optionB;
     private String optionC;
     private String optionD;
-    private List<Object> correctAnswers; // changed from List<?> to List<Object>
+
+    // For multiple choice / true-false
+    private List<Integer> correctAnswers = new ArrayList<>();
     private String questionType;
-    private int selectedAns = -1;
-    private List<Integer> selectedAnsList = new ArrayList<>();
-    private String userAnswerText = null;
+    private String qID;
+
+    public String getqID() {
+        return qID;
+    }
+
+    public void setqID(String qID) {
+        this.qID = qID;
+    }
+
+    private int selectedAns = -1; // for single choice / true-false
+    private List<Integer> selectedAnsList = new ArrayList<>(); // for multi-select
 
     public static final int NOT_VISITED = 0;
     public static final int UNANSWERED = 1;
     public static final int ANSWERED = 2;
     public static final int REVIEW = 3;
     private int status = NOT_VISITED;
+    private boolean isBookmarked;
+
+
+    public boolean isBookmarked() {
+        return isBookmarked;
+    }
+
+    public void setBookmarked(boolean bookmarked) {
+        isBookmarked = bookmarked;
+    }
 
     // Constructor
     public QuestionModel(String question,
@@ -28,9 +49,9 @@ public class QuestionModel implements Serializable {
                          String optionB,
                          String optionC,
                          String optionD,
-                         List<Object> correctAnswers,
+                         List<Integer> correctAnswers,
                          String questionType,
-                         int status) {
+                         int status, boolean isBookmarked, String qID) {
         this.question = question;
         this.optionA = optionA;
         this.optionB = optionB;
@@ -39,6 +60,8 @@ public class QuestionModel implements Serializable {
         this.correctAnswers = correctAnswers;
         this.questionType = questionType;
         this.status = status;
+        this.isBookmarked = isBookmarked;
+        this.qID = qID;
     }
 
     // Getters
@@ -47,17 +70,15 @@ public class QuestionModel implements Serializable {
     public String getOptionB() { return optionB; }
     public String getOptionC() { return optionC; }
     public String getOptionD() { return optionD; }
-    public List<Object> getCorrectAnswers() { return correctAnswers; }
+    public List<Integer> getCorrectAnswers() { return correctAnswers; }
     public String getQuestionType() { return questionType; }
     public int getSelectedAns() { return selectedAns; }
     public List<Integer> getSelectedAnsList() { return selectedAnsList; }
-    public String getUserAnswerText() { return userAnswerText; }
     public int getStatus() { return status; }
 
     // Setters
     public void setSelectedAns(int selectedAns) { this.selectedAns = selectedAns; }
     public void setSelectedAnsList(List<Integer> selectedAnsList) { this.selectedAnsList = selectedAnsList; }
-    public void setUserAnswerText(String userAnswerText) { this.userAnswerText = userAnswerText; }
     public void setStatus(int status) { this.status = status; }
 
     // Helpers for multi-select
@@ -72,37 +93,27 @@ public class QuestionModel implements Serializable {
     }
 
     // ✅ Evaluation Logic
-
     public boolean isAttempted() {
         return selectedAns != -1 ||
-                (selectedAnsList != null && !selectedAnsList.isEmpty()) ||
-                (userAnswerText != null && !userAnswerText.trim().isEmpty());
+                (selectedAnsList != null && !selectedAnsList.isEmpty());
     }
 
     public boolean isCorrect() {
-        if (correctAnswers == null || correctAnswers.isEmpty()) return false;
-
         switch (questionType) {
             case "single_choice":
             case "true_false":
-                if (selectedAns == -1) return false;
-                Object correct = correctAnswers.get(0);
-                if (correct instanceof Number) {
-                    return ((Number) correct).intValue() == selectedAns;
-                } else {
-                    return correct.toString().equals(String.valueOf(selectedAns));
-                }
+                return selectedAns != -1 &&
+                        correctAnswers != null &&
+                        !correctAnswers.isEmpty() &&
+                        correctAnswers.get(0) == selectedAns;
 
             case "multi_select":
-                if (selectedAnsList == null || selectedAnsList.isEmpty()) return false;
-                List<Object> correctList = correctAnswers;
-                return selectedAnsList.containsAll(correctList) && correctList.containsAll(selectedAnsList);
-
-            case "short_answer":
-                if (userAnswerText == null || userAnswerText.trim().isEmpty()) return false;
-                String userAns = userAnswerText.trim().toLowerCase();
-                String correctAns = correctAnswers.get(0).toString().trim().toLowerCase();
-                return userAns.equals(correctAns);
+                return selectedAnsList != null &&
+                        !selectedAnsList.isEmpty() &&
+                        correctAnswers != null &&
+                        !correctAnswers.isEmpty() &&
+                        selectedAnsList.containsAll(correctAnswers) &&
+                        correctAnswers.containsAll(selectedAnsList);
 
             default:
                 return false;
@@ -114,4 +125,3 @@ public class QuestionModel implements Serializable {
         return isCorrect() ? "correct" : "wrong";
     }
 }
-

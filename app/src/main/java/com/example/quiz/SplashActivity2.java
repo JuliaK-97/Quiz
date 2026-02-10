@@ -15,6 +15,31 @@ import androidx.core.view.WindowInsetsCompat;
 import android.graphics.Typeface;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
+/**
+ * SplashActivity2
+ *
+ * Purpose:
+ * This activity displays a splash screen when the app starts, shows a short
+ * animation, and then routes the user to the appropriate next screen based on
+ * their authentication status.
+ *
+ * Why this activity is used:
+ * - Provides a brief branded introduction to the app.
+ * - Allows time for Firebase initialization before the user enters the app.
+ * - Automatically redirects authenticated users to the main screen.
+ * - Redirects unauthenticated users to the login screen.
+ *
+ * How it works:
+ * 1. Enables edge-to-edge layout and sets the splash screen layout.
+ * 2. Applies a custom font to the app name text view and starts the animation.
+ * 3. Initializes FirebaseAuth and FirebaseFirestore instances.
+ * 4. Uses a background thread to delay for 3 seconds.
+ * 5. After the delay, checks FirebaseAuth.getCurrentUser():
+ *    - If the user is already logged in, navigates to MainActivity.
+ *    - If the user is not logged in, navigates to LoginActivity2.
+ * 6. Finishes the splash activity so the user cannot return to it.
+ */
 
 
 public class SplashActivity2 extends AppCompatActivity {
@@ -35,6 +60,8 @@ public class SplashActivity2 extends AppCompatActivity {
         appName.setAnimation(anim);
 
         mAuth = FirebaseAuth.getInstance();
+
+        DbQuery.g_firestore = FirebaseFirestore.getInstance();
 
         new Thread() {
             @Override

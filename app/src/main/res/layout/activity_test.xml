@@ -6,19 +6,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".TestActivity"
-    android:background="#E1EDFD">
+    android:background="@color/background"
+    android:fitsSystemWindows="true">
+
     <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:id="@+id/toolbar"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:background="#6200EE"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark"
-        >
-
-    </androidx.appcompat.widget.Toolbar>
+        android:background="@color/primary"
+        android:clickable="true"
+        android:focusable="true" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/test_recycler_view"
@@ -30,8 +30,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar">
-
-    </androidx.recyclerview.widget.RecyclerView>
+        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
