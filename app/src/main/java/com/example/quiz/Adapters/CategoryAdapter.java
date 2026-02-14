@@ -16,18 +16,15 @@ import java.util.List;
 
 /**
  * CategoryAdapter
- *
  * Purpose:
  * This adapter displays all quiz categories in a GridView/ListView on the home screen.
  * Each category item shows the category name and the number of tests available.
  * When a category is clicked, it navigates the user to the TestActivity for that category.
- *
  * Why this adapter is used:
  * - Separates UI binding logic from Activity code (cleaner architecture).
  * - Provides a reusable way to show categories using a GridView/ListView.
  * - Handles click events to navigate users to the correct category tests.
  * - Keeps the category list dynamic using setCategories() for updates.
- *
  * How it works:
  * 1. Receives a list of CategoryModel objects representing available categories.
  * 2. For each category item:
@@ -37,7 +34,6 @@ import java.util.List;
  *   -- Sets the selected category index in DbQuery (g_selected_cat_index).
  *   -- Starts TestActivity to show tests in that category.
  * 3. Uses BaseAdapter methods to provide item count, item retrieval, and view recycling.
- *
  * Notes:
  * - This adapter is UI-driven; it relies on Android framework components.
  * - Unit testing is not required; testing should be done via instrumentation/UI tests.
@@ -92,7 +88,7 @@ public class CategoryAdapter extends BaseAdapter {
 
         CategoryModel category = cat_list.get(i);
         catName.setText(category.getName());
-        noOfTests.setText("Tests: " + category.getNoOfTests());
+        noOfTests.setText(viewGroup.getContext().getString(R.string.tests_count, category.getNoOfTests()));
 
         return myView;
     }

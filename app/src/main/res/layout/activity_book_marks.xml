@@ -15,7 +15,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:background="@color/primary"
+        android:background="@drawable/toolbar_gradient"
         android:clickable="true"
         android:focusable="true" />
 

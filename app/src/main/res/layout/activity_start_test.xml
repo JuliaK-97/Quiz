@@ -68,8 +68,8 @@
         <androidx.cardview.widget.CardView
             android:layout_width="120dp"
             android:layout_height="160dp"
-            app:cardCornerRadius="5dp"
-            app:cardElevation="5dp"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="8dp"
             app:cardUseCompatPadding="true"
             android:layout_weight="1"
             >
@@ -114,45 +114,48 @@
         <androidx.cardview.widget.CardView
             android:layout_width="120dp"
             android:layout_height="160dp"
-            app:cardCornerRadius="5dp"
-            app:cardElevation="5dp"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="8dp"
             app:cardUseCompatPadding="true"
             android:layout_weight="1"
             >
+
             <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_width="85dp"
+                android:layout_height="110dp"
                 android:layout_gravity="center"
                 android:layout_margin="8dp"
-                android:orientation="vertical"
                 android:gravity="center"
-                android:paddingTop="16dp"
-                >
+                android:orientation="vertical"
+                android:paddingTop="16dp">
+
                 <ImageView
                     android:layout_width="36dp"
                     android:layout_height="36dp"
-                    android:src="@drawable/trophy"
-                    android:layout_marginBottom="8dp"/>
+                    android:layout_marginBottom="8dp"
+                    android:src="@drawable/trophy" />
+
                 <TextView
+                    android:id="@+id/st_best_score"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/st_best_score"
-                    android:text = "Best score"
-                    android:gravity="center_horizontal"
                     android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="Best score"
                     android:textAlignment="center"
                     android:textSize="18sp"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
+
                 <TextView
+                    android:id="@+id/st_value_score"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/st_value_score"
-                    android:text = "80"
-                    android:gravity="center_horizontal"
                     android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="80"
                     android:textAlignment="center"
                     android:textSize="20sp"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
 
             </LinearLayout>
 
@@ -160,8 +163,8 @@
         <androidx.cardview.widget.CardView
             android:layout_width="120dp"
             android:layout_height="160dp"
-            app:cardCornerRadius="5dp"
-            app:cardElevation="5dp"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="8dp"
             app:cardUseCompatPadding="true"
             android:layout_weight="1"
             >
@@ -220,7 +223,9 @@
         android:elevation="5dp"
         android:translationZ="3dp"
         android:stateListAnimator="@null"
-        android:backgroundTint="#5AE45E"
+        android:backgroundTint="@null"
+        app:backgroundTint = "@null"
+        android:background="@drawable/btn_start_gradient"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"

@@ -3,23 +3,20 @@ package com.example.quiz;
 import android.util.ArrayMap;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
 
 import com.example.quiz.Models.CategoryModel;
 import com.example.quiz.Models.ProfileModel;
 import com.example.quiz.Models.QuestionModel;
 import com.example.quiz.Models.RankModel;
 import com.example.quiz.Models.TestModel;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.firestore.WriteBatch;
 
@@ -37,7 +34,7 @@ public class DbQuery {
     public static List<TestModel> g_testList = new ArrayList<>();
     public static List<RankModel> g_usersList = new ArrayList<>();
     public static int g_usersCount = 0;
-    public static boolean isMe0nTopList = false;
+    public static boolean isCurrentUserInTop20 = false;
     public static int g_selected_cat_index = 0;
     public static ProfileModel myProfile = new ProfileModel("NA", null, null, 0);
     public static int g_selected_test_index =0;
@@ -51,35 +48,28 @@ public class DbQuery {
 
     /**
      * createUserData
-     *
      * Purpose:
      * This method initializes a new user’s data in Firestore when they first sign up or log in.
      * It creates a document in the "USERS" collection with basic profile information and
      * default values for score and bookmarks. It also increments the global user count.
-     *
      * Why this method is used:
      * - Ensures every new user has a properly structured Firestore document.
      * - Sets default values for TOTAL_SCORE and BOOKMARKS so the app can safely reference them later.
      * - Updates the "TOTAL_USERS" document to keep track of how many users exist in the system.
      * - Uses a Firestore batch write so both operations (user creation + count increment) succeed together.
-     *
      * How it works:
      * 1. Creates a Map (userData) with the following fields:
      *    - EMAIL_ID: the user’s email address.
      *    - NAME: the user’s display name.
      *    - TOTAL_SCORE: initialized to 0 (no progress yet).
      *    - BOOKMARKS: initialized to 0 (no saved questions yet).
-     *
      * 2. Creates a DocumentReference (userDoc) pointing to the new user’s UID in the "USERS" collection.
-     *
      * 3. Starts a Firestore WriteBatch:
      *    - Adds the userData map to the userDoc (creates the user document).
      *    - Updates the "TOTAL_USERS" document by incrementing the COUNT field by 1.
-     *
      * 4. Commits the batch:
      *    - On success: calls completeListener.onSuccess() so the UI can proceed.
      *    - On failure: calls completeListener.onFailure() so the UI can handle errors.
-     *
      * Notes:
      * - Using a batch ensures that the operations are treated as single unit: either both succeed or both fail
      * - This prevents inconsistencies (e.g., a user document created without updating the total count).
@@ -91,6 +81,11 @@ public class DbQuery {
         userData.put("NAME", name);
         userData.put("TOTAL_SCORE", 0); // default score
         userData.put("BOOKMARKS", 0);   // default bookmarks count
+        //handle user if not logged in
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if(user == null){
+            return;
+        }
 
         // Step 2: Reference to the new user document (based on UID)
         DocumentReference userDoc = g_firestore.collection("USERS")
@@ -106,34 +101,25 @@ public class DbQuery {
 
         // Step 4: Commit batch
         batch.commit()
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        completeListener.onSuccess(); // notify success
-                    }
+                .addOnSuccessListener(unused -> {
+                    completeListener.onSuccess(); // notify success
                 })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        completeListener.onFailure(); // notify failure
-                    }
+                .addOnFailureListener(e -> {
+                    completeListener.onFailure(); // notify failure
                 });
     }
     /**
      * loadCategories
-     *
      * Purpose:
      * This method retrieves all quiz categories from Firestore and stores them in the global
      * category list (g_catList). Each category contains its ID, name, and the number of tests
      * available under it. It ensures that the app has the latest category data whenever a user
      * logs in successfully.
-     *
      * Why this method is used:
      * - Categories define the structure of the quiz app (e.g., Road rules, Vehicle controls, etc).
      * - Each category contains multiple tests, so loading them is essential for navigation.
      * - Ensures the app dynamically adapts to changes in Firestore (new categories, updated names).
      * - Provides a clean, centralized way to initialize categories after login.
-     *
      * How it works:
      * 1. Clears the existing g_catList to avoid duplicates.
      * 2. Fetches the "Categories" document from the QUIZ collection.
@@ -153,7 +139,6 @@ public class DbQuery {
      * 6. Handles errors gracefully:
      *    - If the "Categories" document doesn’t exist or COUNT <= 0 → calls onFailure().
      *    - If any category document fails to load → calls onFailure().
-     *
      * Notes:
      * - This method is asynchronous: Firestore queries run in parallel for each category.
      * - AtomicInteger ensures thread-safe counting of loaded categories.
@@ -170,8 +155,8 @@ public class DbQuery {
                         return;
                     }
 
-                    long catCount = catListDoc.getLong("COUNT");
-                    if (catCount <= 0) {
+                    Long catCountValue = catListDoc.getLong("COUNT");
+                    if (catCountValue == null || catCountValue <= 0) {
                         completeListener.onFailure();
                         return;
                     }
@@ -179,7 +164,7 @@ public class DbQuery {
                     // Counter to track how many categories have finished loading
                     AtomicInteger loadedCount = new AtomicInteger(0);
 
-                    for (int i = 1; i <= catCount; i++) {
+                    for (int i = 1; i <= catCountValue; i++) {
                         String catID = catListDoc.getString("CAT" + i + "_ID");
                         if (catID == null) continue;
 
@@ -194,7 +179,7 @@ public class DbQuery {
                                     }
 
                                     // ✅ Only call onSuccess once, when all categories are loaded
-                                    if (loadedCount.incrementAndGet() == catCount) {
+                                    if (loadedCount.incrementAndGet() == catCountValue) {
                                         completeListener.onSuccess();
                                     }
                                 })
@@ -209,25 +194,21 @@ public class DbQuery {
 
     /**
      * loadQuestions
-     *
      * Purpose:
      * This method retrieves all quiz questions for the currently selected category and test
      * from Firestore. It builds a list of QuestionModel objects that represent each question,
      * its options, correct answers, and bookmark status.
-     *
      * Why this method is used:
      * - Provides the actual content of the quiz (questions + answers).
      * - Ensures questions are dynamically loaded from Firestore instead of being hardcoded.
      * - Supports multiple question types (single choice, multiple choice, true/false).
      * - Integrates bookmark functionality so users can save/revisit questions.
-     *
      * How it works:
      * 1. Clears the existing g_questionList to avoid duplicates.
      * 2. Queries the "Questions" collection in Firestore:
      *    - Filters by CATEGORY (based on the selected category index).
      *    - Filters by TEST (based on the selected test index).
      *    - Returns all matching documents.
-     *
      * 3. For each question document:
      *    - Extracts fields:
      *      - QUESTION: the question text.
@@ -237,7 +218,6 @@ public class DbQuery {
      *    - Converts ANSWER into a List<Integer> (handles both numeric and string values safely).
      *    - Checks if the question ID exists in g_bmIdList (bookmark list).
      *      - If yes → marks isBookmarked = true.
-     *
      * 4. Creates a new QuestionModel object with:
      *    - Question text and options (defaulting to empty strings if null).
      *    - Correct answers list.
@@ -245,11 +225,9 @@ public class DbQuery {
      *    - Initial state = NOT_VISITED (user hasn’t answered yet).
      *    - Bookmark status.
      *    - Firestore document ID.
-     *
      * 5. Adds each QuestionModel to g_questionList.
      * 6. Calls completeListener.onSuccess() once all questions are loaded.
      * 7. If the query fails, calls completeListener.onFailure().
-     *
      * Notes:
      * - This method is asynchronous: Firestore query runs in the background.
      * - Bookmark integration ensures consistency between saved questions and quiz display.
@@ -322,16 +300,13 @@ public class DbQuery {
 
     /**
      * loadTestData
-     *
      * Purpose:
      * Loads all tests for the currently selected category from Firestore. Each test has an ID
      * and a time limit. This prepares the g_testList so the user can select and attempt tests.
-     *
      * Why this method is used:
      * - Ensures the app dynamically loads tests for each category.
      * - Provides test IDs and time limits needed for quiz functionality.
      * - Clears old test data before loading new ones to avoid duplication.
-     *
      * How it works:
      * 1. Clears g_testList.
      * 2. Fetches the "TESTS_INFO" document inside the selected category’s TESTS_LIST subcollection.
@@ -367,17 +342,14 @@ public class DbQuery {
 
     /**
      * getUserData
-     *
      * Purpose:
      * Loads the current user’s profile and performance data from Firestore. This includes
      * name, email, phone, bookmarks count, and TOTAL_SCORE. Updates both myProfile and
      * myPerformance objects so the app can display user info consistently.
-     *
      * Why this method is used:
      * - Ensures the app has the latest user profile data after login.
      * - Keeps myPerformance in sync with Firestore’s TOTAL_SCORE.
      * - Provides bookmark count for Saved Questions feature.
-     *
      * How it works:
      * 1. Fetches the current user’s document from the USERS collection.
      * 2. Updates myProfile with:
@@ -393,22 +365,27 @@ public class DbQuery {
      * 5. Calls onFailure() if Firestore query fails.
      */
     public static void getUserData(MyCompleteListener completeListener) {
-        g_firestore.collection("USERS").document(FirebaseAuth.getInstance().getUid())
-                .get()
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if(user==null){
+            completeListener.onFailure();
+            return;
+        }
+        DocumentReference userDoc = g_firestore.collection("USERS").document(user.getUid());
+                userDoc.get()
                 .addOnSuccessListener(documentSnapshot -> {
                     myProfile.setName(documentSnapshot.getString("NAME"));
                     myProfile.setEmail(documentSnapshot.getString("EMAIL_ID"));
 
                     if (documentSnapshot.getString("PHONE") != null)
                         myProfile.setPhone(documentSnapshot.getString("PHONE"));
+                    Long bookmarks = documentSnapshot.getLong("BOOKMARKS");
+                    if(bookmarks != null)
+                        myProfile.setBookmarksCount(bookmarks.intValue());
 
-                    if (documentSnapshot.get("BOOKMARKS") != null)
-                        myProfile.setBookmarksCount(documentSnapshot.getLong("BOOKMARKS").intValue());
+                    Long totalScore = documentSnapshot.getLong("TOTAL_SCORE");
+                    if(totalScore != null)
+                        myPerformance.setOverallScore(totalScore.intValue());
 
-                    // ✅ FIX: use overallScore instead of score
-                    if (documentSnapshot.get("TOTAL_SCORE") != null) {
-                        myPerformance.setOverallScore(documentSnapshot.getLong("TOTAL_SCORE").intValue());
-                    }
                     myPerformance.setName(documentSnapshot.getString("NAME"));
 
                     completeListener.onSuccess();
@@ -418,15 +395,12 @@ public class DbQuery {
 
     /**
      * saveProfileData
-     *
      * Purpose:
      * Updates the current user’s profile information (name and phone) in Firestore.
      * Also updates the local myProfile object so the app reflects changes immediately.
-     *
      * Why this method is used:
      * - Allows users to edit their profile details.
      * - Keeps Firestore and local cache (myProfile) in sync.
-     *
      * How it works:
      * 1. Creates a map (profileData) with updated fields:
      *    - NAME (always updated).
@@ -439,12 +413,17 @@ public class DbQuery {
      *    - Calls completeListener.onFailure().
      */
     public static void saveProfileData(String name, String phone, MyCompleteListener completeListener) {
+       FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+       if(user == null){
+           completeListener.onFailure();
+           return;
+       }
         Map<String, Object> profileData = new ArrayMap<>();
         profileData.put("NAME", name);
         if (phone != null)
             profileData.put("PHONE", phone);
 
-        g_firestore.collection("USERS").document(FirebaseAuth.getInstance().getUid())
+        g_firestore.collection("USERS").document(user.getUid())
                 .update(profileData)
                 .addOnSuccessListener(unused -> {
                     myProfile.setName(name);
@@ -456,15 +435,12 @@ public class DbQuery {
     }
     /**
      * loadBmIds
-     *
      * Purpose:
      * Loads the IDs of all bookmarked questions for the current user from Firestore.
      * These IDs are stored in g_bmIdList for later use (e.g., loading full question details).
-     *
      * Why this method is used:
      * - Provides a lightweight way to fetch only bookmark IDs before loading full questions.
      * - Reduces initial data transfer by not fetching entire question documents immediately.
-     *
      * How it works:
      * 1. Clears g_bmIdList to avoid duplicates.
      * 2. Fetches the "BOOKMARKS" document inside the user’s USER_DATA subcollection.
@@ -474,15 +450,20 @@ public class DbQuery {
      *    - Adds it to g_bmIdList.
      * 5. Calls completeListener.onSuccess() once all IDs are loaded.
      * 6. Calls onFailure() if Firestore query fails.
-     *
      * Notes:
      * - This method only loads IDs, not full question data.
      * - Full question details are loaded later in loadBookMarks().
      */
     public static void loadBmIds(MyCompleteListener completeListener) {
         g_bmIdList.clear();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-        g_firestore.collection("USERS").document(FirebaseAuth.getInstance().getUid())
+        if (user == null) {
+            completeListener.onFailure();
+            return;
+        }
+
+        g_firestore.collection("USERS").document(user.getUid())
                 .collection("USER_DATA").document("BOOKMARKS")
                 .get()
                 .addOnSuccessListener(documentSnapshot -> {
@@ -498,15 +479,12 @@ public class DbQuery {
 
     /**
      * loadBookMarks
-     *
      * Purpose:
      * Loads full question details for all bookmarked questions using IDs from g_bmIdList.
      * Builds a list of QuestionModel objects (g_bookmarksList) for display in the Saved Questions screen.
-     *
      * Why this method is used:
      * - Allows users to revisit and practice bookmarked questions.
      * - Ensures bookmark list stays consistent with Firestore data.
-     *
      * How it works:
      * 1. Clears g_bookmarksList.
      * 2. Iterates through each bookmark ID in g_bmIdList.
@@ -520,7 +498,6 @@ public class DbQuery {
      * 4. Uses a counter (var) to track how many questions have been loaded.
      *    - Calls completeListener.onSuccess() once all bookmarks are loaded.
      * 5. Calls onFailure() if any query fails.
-     *
      * Notes:
      * - Bookmarked questions are marked as NOT_VISITED initially.
      * - If a question no longer exists in Firestore, it is skipped.
@@ -528,7 +505,7 @@ public class DbQuery {
     public static void loadBookMarks(MyCompleteListener completeListener) {
         g_bookmarksList.clear();
         var = 0;
-        if(g_bmIdList.size() ==0)
+        if(g_bmIdList.isEmpty())
             completeListener.onSuccess();
 
         for (int i = 0; i < g_bmIdList.size(); i++) {
@@ -583,15 +560,12 @@ public class DbQuery {
 
     /**
      * getTopUsers
-     *
      * Purpose:
      * Retrieves the top 20 users from Firestore based on TOTAL_SCORE and stores them in g_usersList.
      * Also checks if the current user is in the top 20 and updates myPerformance accordingly.
-     *
      * Why this method is used:
      * - Powers the leaderboard by showing the highest scoring users.
      * - Updates myPerformance with rank and score if the current user is in the top 20.
-     *
      * How it works:
      * 1. Clears g_usersList to avoid duplicates.
      * 2. Queries Firestore for users with TOTAL_SCORE > 0, ordered descending by TOTAL_SCORE.
@@ -608,7 +582,13 @@ public class DbQuery {
      */
     public static void getTopUsers(MyCompleteListener completeListener) {
         g_usersList.clear();
-        String myUID = FirebaseAuth.getInstance().getUid();
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser == null) {
+            // User not signed in
+            completeListener.onFailure();
+            return;
+        }
+        String myUID = currentUser.getUid();
 
         g_firestore.collection("USERS")
                 .whereGreaterThan("TOTAL_SCORE", 0)
@@ -618,18 +598,26 @@ public class DbQuery {
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     int rank = 1;
                     for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                        Long totalScoreLong = doc.getLong("TOTAL_SCORE");
+
+                        int totalScore;
+                        if(totalScoreLong != null){
+                            totalScore = totalScoreLong.intValue();
+                        } else{
+                            totalScore = 0;
+                        }
                         g_usersList.add(new RankModel(
                                 doc.getString("NAME"),
-                                doc.getLong("TOTAL_SCORE").intValue(),
+                                totalScore,
                                 rank,
-                                doc.getLong("TOTAL_SCORE").intValue() // overallScore set equal to TOTAL_SCORE
+                                totalScore // overallScore set equal to TOTAL_SCORE
                         ));
 
                         // ✅ Update myPerformance if current user is in top 20
                         if (myUID.compareTo(doc.getId()) == 0) {
-                            isMe0nTopList = true;
+                            isCurrentUserInTop20 = true;
                             myPerformance.setRank(rank);
-                            myPerformance.setOverallScore(doc.getLong("TOTAL_SCORE").intValue());
+                            myPerformance.setOverallScore(totalScore);
                             myPerformance.setName(doc.getString("NAME"));
                         }
                         rank++;
@@ -640,14 +628,11 @@ public class DbQuery {
     }
     /**
      * getUsersCount
-     *
      * Purpose:
      * Retrieves the total number of users from Firestore and stores it in g_usersCount.
-     *
      * Why this method is used:
      * - Needed for rank calculation when the current user is not in the top 20.
      * - Provides context for leaderboard scaling.
-     *
      * How it works:
      * 1. Fetches the "TOTAL_USERS" document from the USERS collection.
      * 2. Reads the COUNT field and stores it in g_usersCount.
@@ -660,36 +645,32 @@ public class DbQuery {
     {
         g_firestore.collection("USERS").document("TOTAL_USERS")
                 .get()
-                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        g_usersCount = documentSnapshot.getLong("COUNT").intValue();
-                        completeListener.onSuccess();
-
+                .addOnSuccessListener(documentSnapshot -> {
+                    Long countLong = documentSnapshot.getLong("COUNT");
+                    if (countLong != null) {
+                        g_usersCount = countLong.intValue();
+                    } else {
+                        g_usersCount = 0;
                     }
+
+                    /*g_usersCount = (countLong != null) ? countLong.intValue() : 0;
+                    * you can replace the if else statement with this ternary operator*/
+                    completeListener.onSuccess();
+
                 })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        completeListener.onFailure();
-
-                    }
-                });
+                .addOnFailureListener(e -> completeListener.onFailure());
     }
     /**
      * loadData
-     *
      * Purpose:
      * Loads all essential data for the app after login:
      * - Categories
      * - User profile and performance
      * - Total user count
      * - Bookmark IDs
-     *
      * Why this method is used:
      * - Provides a single entry point to initialize the app’s data.
      * - Ensures categories, user data, and bookmarks are loaded in sequence.
-     *
      * How it works:
      * 1. Calls loadCategories().
      *    - On success → calls getUserData().
@@ -703,10 +684,9 @@ public class DbQuery {
      * 4. Calls loadBmIds().
      *    - On success → calls completeListener.onSuccess().
      *    - On failure → calls completeListener.onFailure().
-     *
      * Notes:
      * - This method orchestrates multiple data-loading calls.
-     * - ✅ Since getUserData now correctly sets myPerformance.overallScore,
+     * - Since getUserData now correctly sets myPerformance.overallScore,
      *   loadData will initialize both profile and performance consistently.
      */
     public static void loadData(MyCompleteListener completeListener) {
@@ -745,19 +725,16 @@ public class DbQuery {
 
     /**
      * loadMyScores
-     *
      * Purpose:
      * Loads the user's saved test scores from Firestore. Each test has a "top score"
      * (the highest score the user has achieved for that test). These scores are stored in the
      * "MY_SCORES" document under USER_DATA.
-     *
      * Why this method is used:
      * - Ensures that when the app starts or refreshes, the user's progress for each test is
      *   correctly loaded into memory (g_testList).
      * - Allows the TestAdapter to display accurate progress bars for each test.
      * - Provides the data needed to calculate the user's TOTAL_SCORE (sum of all top scores),
      *   which is used for ranking and account statistics.
-     *
      * How it works:
      * 1. Queries Firestore for the "MY_SCORES" document belonging to the current user.
      * 2. If the document exists:
@@ -769,13 +746,18 @@ public class DbQuery {
      *    myPerformance.overallScore with this value.
      * 5. Calls completeListener.onSuccess() so the UI knows loading is finished.
      * 6. On failure, logs the error, resets scores to 0, and calls completeListener.onFailure().
-     *
-     * Notes:
-     * - ✅ FIX: Use myPerformance.setOverallScore() instead of setScore() for consistency.
      */
     public static void loadMyScores(MyCompleteListener completeListener) {
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser == null) {
+            // If user is not signed in, scores can't load
+            completeListener.onFailure();
+            return;
+        }
+        String myUID = currentUser.getUid();
+
         g_firestore.collection("USERS")
-                .document(FirebaseAuth.getInstance().getUid())
+                .document(myUID)
                 .collection("USER_DATA").document("MY_SCORES")
                 .get()
                 .addOnSuccessListener(documentSnapshot -> {
@@ -783,8 +765,9 @@ public class DbQuery {
                         // Document exists, load scores
                         for (int i = 0; i < g_testList.size(); i++) {
                             int top = 0;
-                            if (documentSnapshot.get(g_testList.get(i).getTestID()) != null) {
-                                top = documentSnapshot.getLong(g_testList.get(i).getTestID()).intValue();
+                            Long scoreLong = documentSnapshot.getLong(g_testList.get(i).getTestID());
+                            if (scoreLong != null) {
+                                top = scoreLong.intValue();
                             }
                             g_testList.get(i).setTopScore(top);
                         }
@@ -795,12 +778,12 @@ public class DbQuery {
                         }
                     }
 
-                    // ✅ Calculate TOTAL_SCORE (sum of all top scores)
+                    // Calculate TOTAL_SCORE (sum of all top scores)
                     int total = 0;
                     for (TestModel test : g_testList) {
                         total += test.getTopScore();
                     }
-                    myPerformance.setOverallScore(total); // FIX: use overallScore
+                    myPerformance.setOverallScore(total);
 
                     completeListener.onSuccess();
                 })
@@ -809,25 +792,22 @@ public class DbQuery {
                     for (int i = 0; i < g_testList.size(); i++) {
                         g_testList.get(i).setTopScore(0);
                     }
-                    myPerformance.setOverallScore(0); // FIX: reset overallScore
+                    myPerformance.setOverallScore(0);
                     completeListener.onFailure();
                 });
     }
 
     /**
      * saveResult
-     *
      * Purpose:
      * Saves the result of a completed test into Firestore. Updates:
      * - The user's bookmarks.
      * - The user's TOTAL_SCORE (sum of all top scores).
      * - The user's per-test top score (only if the new score is higher).
-     *
      * Why this method is used:
      * - Ensures user progress is persisted in Firestore.
      * - Keeps both per-test progress and overall leaderboard ranking consistent.
      * - Uses a Firestore batch write so all updates succeed or fail together.
-     *
      * How it works:
      * 1. Creates a batch write operation.
      * 2. Updates the BOOKMARKS document with the current list.
@@ -836,13 +816,17 @@ public class DbQuery {
      * 5. Commits the batch:
      *    - On success: updates local cache (g_testList and myPerformance).
      *    - On failure: calls completeListener.onFailure().
-     *
      * Notes:
      * - ✅ FIX: Use myPerformance.setOverallScore() instead of setScore().
      * - This ensures AccountFragment and LeaderboardFragment display the correct score.
      */
     public static void saveResult(int score, MyCompleteListener completeListener) {
         WriteBatch batch = g_firestore.batch();
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if(currentUser == null){
+            completeListener.onFailure();
+            return;
+        }
 
         // Bookmarks
         Map<String, Object> bmData = new ArrayMap<>();
@@ -850,13 +834,13 @@ public class DbQuery {
             bmData.put("BM" + (i + 1) + "_ID", g_bmIdList.get(i));
         }
         DocumentReference bmDoc = g_firestore.collection("USERS")
-                .document(FirebaseAuth.getInstance().getUid())
+                .document(currentUser.getUid())
                 .collection("USER_DATA").document("BOOKMARKS");
         batch.set(bmDoc, bmData);
 
         // Reference to the user document
         DocumentReference userDoc = g_firestore.collection("USERS")
-                .document(FirebaseAuth.getInstance().getUid());
+                .document(currentUser.getUid());
 
         // Update per-test top score if needed
         if (score > g_testList.get(g_selected_test_index).getTopScore()) {

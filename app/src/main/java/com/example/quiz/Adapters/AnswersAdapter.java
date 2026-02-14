@@ -1,6 +1,8 @@
 package com.example.quiz.Adapters;
 
-import android.graphics.Color;
+
+
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,18 +18,15 @@ import java.util.ArrayList;
 import java.util.List;
 /**
  * AnswersAdapter
- *
  * Purpose:
  * This adapter binds quiz questions and their results to a RecyclerView in the
  * "Answers" screen. It displays each question along with the user’s selected answers
  * and highlights whether the response was correct, incorrect, or unanswered.
- *
  * Why this adapter is used:
  * - Provides a read-only review view that does not allow users to change answers.
  * - Allows the app to reuse the same question model data to display results.
  * - Highlights correct and incorrect answers using clear visual feedback.
  * - Keeps UI rendering logic separate from quiz logic handled by QuestionsActivity.
- *
  * How it works:
  * 1. Receives a list of QuestionModel objects representing the quiz session.
  * 2. For each item, binds the question text and options to the layout.
@@ -108,12 +107,12 @@ public class AnswersAdapter extends RecyclerView.Adapter<AnswersAdapter.ViewHold
         private void setData(int pos, String ques, String a, String b, String c, String d,
                              List<Integer> selected, List<Integer> correctAns, String questionType) {
 
-            quesNo.setText("Question No. " + (pos + 1));
+            quesNo.setText(itemView.getContext().getString(R.string.question_number, pos + 1));
             question.setText(ques);
             if ("true_false".equals(questionType)) {
                 // Show only two options if the question is of type true/false
-                optionA.setText("True");
-                optionB.setText("False");
+                optionA.setText(itemView.getContext().getString(R.string.true_option));
+                optionB.setText(itemView.getContext().getString(R.string.false_option));
 
                 optionC.setVisibility(View.GONE);
                 optionD.setVisibility(View.GONE);
@@ -121,15 +120,15 @@ public class AnswersAdapter extends RecyclerView.Adapter<AnswersAdapter.ViewHold
                 resetOptionColors();
 
                 if (selected.isEmpty()) {
-                    result.setText("UN-ANSWERED");
+                    result.setText(itemView.getContext().getString(R.string.unanswered));
                     result.setTextColor(itemView.getContext().getResources().getColor(R.color.black));
                 } else {
                     if (correctAns.containsAll(selected) && selected.containsAll(correctAns)) {
-                        result.setText("CORRECT");
+                        result.setText(itemView.getContext().getString(R.string.correct));
                         result.setTextColor(itemView.getContext().getResources().getColor(R.color.green_500));
                         setOptionColors(selected, R.color.green_500);
                     } else {
-                        result.setText("WRONG");
+                        result.setText(itemView.getContext().getString(R.string.wrong));
                         result.setTextColor(itemView.getContext().getResources().getColor(R.color.red));
                         setOptionColors(selected, R.color.red);
                         setOptionColors(correctAns, R.color.green_500);
@@ -138,24 +137,24 @@ public class AnswersAdapter extends RecyclerView.Adapter<AnswersAdapter.ViewHold
 
             }
             else {//shows all options for single-choice and multiple-selection question types
-                optionA.setText("A. " + a);
-                optionB.setText("B. " + b);
-                optionC.setText("C. " + c);
-                optionD.setText("D. " + d);
+                optionA.setText(itemView.getContext().getString(R.string.option_a, a));
+                optionB.setText(itemView.getContext().getString(R.string.option_b, b));
+                optionC.setText(itemView.getContext().getString(R.string.option_c, c));
+                optionD.setText(itemView.getContext().getString(R.string.option_d, d));
 
                 if (selected.isEmpty()) {
-                    result.setText("UN-ANSWERED");
+                    result.setText(itemView.getContext().getString(R.string.unanswered));
                     result.setTextColor(itemView.getContext().getResources().getColor(R.color.black));
                     resetOptionColors();
                 } else {
                     if (correctAns.containsAll(selected) && selected.containsAll(correctAns)) {
                         // Correct (all selected match all correct)
-                        result.setText("CORRECT");
+                        result.setText(itemView.getContext().getString(R.string.correct));
                         result.setTextColor(itemView.getContext().getResources().getColor(R.color.green_500));
                         setOptionColors(selected, R.color.green_500);
                     } else {
                         // Wrong
-                        result.setText("WRONG");
+                        result.setText(itemView.getContext().getString(R.string.wrong));
                         result.setTextColor(itemView.getContext().getResources().getColor(R.color.red));
                         setOptionColors(selected, R.color.red);
 

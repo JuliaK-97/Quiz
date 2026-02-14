@@ -6,6 +6,17 @@
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
+    <string name="question_number">Question No. %1$d</string>
+    <string name="option_a">A. %1$s</string>
+    <string name="option_b">B. %1$s</string>
+    <string name="option_c">C. %1$s</string>
+    <string name="option_d">D. %1$s</string>
+    <string name="true_option">True</string>
+    <string name="false_option">False</string>
+    <string name="unanswered">UN-ANSWERED</string>
+    <string name="correct">CORRECT</string>
+    <string name="wrong">WRONG</string>
+    <string name="tests_count">Tests: %1$d</string>
 
     <string name="menu_home">Home</string>
     <string name="menu_gallery">Gallery</string>

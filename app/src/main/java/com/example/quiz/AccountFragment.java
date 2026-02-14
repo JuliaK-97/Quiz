@@ -97,7 +97,7 @@ public class AccountFragment extends Fragment {
             @Override
             public void onSuccess() {
                 if (DbQuery.myPerformance.getOverallScore() != 0) {
-                    if (!DbQuery.isMe0nTopList) { // if user not in top 20, calculate rank
+                    if (!DbQuery.isCurrentUserInTop20) { // if user not in top 20, calculate rank
                         calculateRank();
                     }
                     totalScoreTV.setText(String.valueOf(DbQuery.myPerformance.getOverallScore()));

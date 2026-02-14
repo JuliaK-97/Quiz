@@ -17,18 +17,15 @@ import java.util.ArrayList;
 import java.util.List;
 /**
  * BookmarkAdapter
- *
  * Purpose:
  * This adapter binds bookmarked quiz questions to a RecyclerView in the
  * "Bookmarks" screen. It displays each bookmarked question along with the
  * correct answer(s), without showing the user’s selected answer or status.
- *
  * Why this adapter is used:
  * - Provides a clean, read-only view of bookmarked questions.
  * - Allows the app to reuse the same QuestionModel data loaded from Firestore.
  * - Helps users review correct answers without allowing interaction.
  * - Keeps UI rendering logic separate from quiz logic handled by QuestionsActivity.
- *
  * How it works:
  * 1. Receives a list of QuestionModel objects representing bookmarked questions.
  * 2. For each item, binds the question text and options to the layout.
@@ -102,13 +99,13 @@ public class BookmarkAdapter extends RecyclerView.Adapter<BookmarkAdapter.ViewHo
         private void setData(int pos, String ques, String a, String b, String c, String d,
                              List<Integer> correctAns, String questionType) {
 
-            quesNo.setText("Question No. " + (pos + 1));
+            quesNo.setText(itemView.getContext().getString(R.string.question_number, pos + 1));
             question.setText(ques);
 
             if ("true_false".equals(questionType)) {
                 // Only show two options
-                optionA.setText("True");
-                optionB.setText("False");
+                optionA.setText(itemView.getContext().getString(R.string.true_option));
+                optionB.setText(itemView.getContext().getString(R.string.false_option));
 
                 optionC.setVisibility(View.GONE);
                 optionD.setVisibility(View.GONE);
@@ -129,10 +126,10 @@ public class BookmarkAdapter extends RecyclerView.Adapter<BookmarkAdapter.ViewHo
 
             } else {
                 // Default for single_choice / multi_select
-                optionA.setText("A. " + a);
-                optionB.setText("B. " + b);
-                optionC.setText("C. " + c);
-                optionD.setText("D. " + d);
+                optionA.setText(itemView.getContext().getString(R.string.option_a, a));
+                optionB.setText(itemView.getContext().getString(R.string.option_b, b));
+                optionC.setText(itemView.getContext().getString(R.string.option_c, c));
+                optionD.setText(itemView.getContext().getString(R.string.option_d, d));
 
                 optionC.setVisibility(View.VISIBLE);
                 optionD.setVisibility(View.VISIBLE);

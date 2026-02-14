@@ -83,7 +83,7 @@ public class LeaderboardFragment extends Fragment {
             public void onSuccess() {
                 adapter.notifyDataSetChanged();
                 if (DbQuery.myPerformance.getOverallScore() != 0) { //  use overallScore
-                    if (!DbQuery.isMe0nTopList) { // if user is not in top 20, calculate rank
+                    if (!DbQuery.isCurrentUserInTop20) { // if user is not in top 20, calculate rank
                         calculateRank();
                     }
                     myScoreTV.setText("Score: " + DbQuery.myPerformance.getOverallScore()); // ✅ show overallScore

@@ -16,18 +16,15 @@ import java.util.List;
 
 /**
  * RankAdapter
- *
  * Purpose:
  * This adapter binds user ranking data to the leaderboard RecyclerView.
  * It displays the top users in the system based on their TOTAL_SCORE
  * (sum of all test scores) along with their rank and name.
- *
  * Why this adapter is used:
  * - Powers the leaderboard UI, showing each user's rank, name, and overall score.
  * - Keeps UI binding logic separate from the Activity/Fragment.
  * - Ensures consistency with DbQuery ranking logic (sorted by TOTAL_SCORE).
  * - Limits display to the top 10 users for readability and performance.
- *
  * How it works:
  * 1. Receives a list of RankModel objects (userList) containing name, overall score, and rank.
  * 2. For each item:

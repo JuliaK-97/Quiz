@@ -15,19 +15,16 @@ import com.example.quiz.R;
 
 /**
  * QuestionGridAdapter
- *
  * Purpose:
  * This adapter binds quiz questions to a GridView inside QuestionsActivity.
  * It displays each question number and uses color-coded backgrounds to represent
  * the question’s current status (answered, unanswered, not visited, or marked for review).
  * It also allows users to quickly navigate to any question by tapping the grid item.
- *
  * Why this adapter is used:
  * - Provides a compact overview of quiz progress.
  * - Helps users track which questions still need attention.
  * - Allows direct navigation to any question in the quiz.
  * - Keeps the grid UI logic separate from QuestionsActivity.
- *
  * How it works:
  * 1. Receives the total number of questions (numOfQues).
  * 2. For each grid item:
@@ -40,7 +37,6 @@ import com.example.quiz.R;
  *   -- NOT_VISITED -> Grey
  *   -- REVIEW -> Pink
  *   - Adds an OnClickListener that calls QuestionsActivity.goToQuestion(i) to jump directly to that question.
- *
  * Notes:
  * - This adapter is UI-driven and relies on Android framework components.
  * - Unit testing is not required; testing should be done via instrumentation/UI tests.
