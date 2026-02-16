@@ -21,6 +21,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.example.quiz.Models.QuestionModel;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
@@ -61,6 +62,7 @@ public class ScoreActivity extends AppCompatActivity {
     private TextView dialogText;
     private long timeTaken;
     private int finalScore;
+    private BottomNavigationView bottomNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,11 +94,15 @@ public class ScoreActivity extends AppCompatActivity {
             Intent intent = new Intent(ScoreActivity.this, AnswersActivity.class);
             startActivity(intent);
         });
+        leaderBoardB.setOnClickListener(v -> {
+            bottomNavigationView.setSelectedItemId(R.id.btm_nav_leaderboard);
+        });
 
         reattemptBtn.setOnClickListener(v -> reAttempt());
 
         saveResult();
     }
+
 
     private void init() {
         scoreTV = findViewById(R.id.score);
